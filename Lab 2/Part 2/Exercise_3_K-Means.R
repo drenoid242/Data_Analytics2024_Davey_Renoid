@@ -31,6 +31,11 @@ labeled.clusters[labeled.clusters==2] <- "versivolor"
 labeled.clusters[labeled.clusters==3] <- "virginica"
 table(labeled.clusters, iris[,5], dnn=list('predicted','actual'))
 
+# The cluster plot for petal.length and petal.length worked great for the setosa
+# species. It was able to group setosa together. There were a couple of outliers for 
+# the clusters associated versicolor and virginica. They aren't grouped as well
+# setosa and have some overlap. It can be seen from the elbow plot that the ideal
+# value for k is in the range of 70-75 for the optimal amount of clusters.
 
 ### K-Means with Abalone dataset ###
 
@@ -73,3 +78,10 @@ labeled.clusters[labeled.clusters==1] <- "Old"
 labeled.clusters[labeled.clusters==2] <- "Adult" 
 labeled.clusters[labeled.clusters==3] <- "Young"
 table(labeled.clusters, abalone[,9], dnn=list('predicted','actual'))
+
+# The cluster plot for diameter and whole weight, worked great for clustering the
+# age group predictions. There is some overlap between the all of the clusters for
+# the age group. It can be seen from the elbow plot that the ideal value for k 
+# is 25 for the optimal amount of clusters.
+
+

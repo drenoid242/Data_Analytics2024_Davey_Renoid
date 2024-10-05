@@ -36,6 +36,13 @@ for (k in ks) {
 }
 plot(ks,accuracy,type = "b", xlim = c(0, 100), ylim = c(0.5,0.9))
 
+# The contingency table that was generated for the model of sepal.length and 
+# sepal.width is 75% accurate. The model predicted species for setosa based on 
+# the parameters. It incorrectly predicted 7 versicolor species as virginica and 4 virginica as versicolor.
+# It can be seen from the accuracy plot that the best k value for this model
+# would be 13-15. It would give an accuracy of 80%
+
+
 ### Second subset of features ###
 
 # Train model and predict for sepal.length & petal.length
@@ -59,3 +66,9 @@ for (k in ks) {
   accuracy <- c(accuracy,sum(diag(cm))/length(iris.test$Species))
 }
 plot(ks,accuracy,type = "b", xlim = c(0, 100), ylim = c(0.5,1))
+
+# The contingency table that was generated for the model of sepal.length and 
+# petal.length is 95% accurate. The model predicted species for setosa based on 
+# the parameters. It incorrectly predicted 1 versicolor species as virginica and 1 virginica as versicolor.
+# It can be seen from the accuracy plot that the best k value for this model
+# would be 25. It would give an accuracy of 95%
