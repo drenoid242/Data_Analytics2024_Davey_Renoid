@@ -198,8 +198,96 @@ print(paste("Accuracy:", accuracy_2))
 
 ## Clustering ##
 
-kmeans_variables <- c('SPI', 'ECO', 'BDH', 'MKP', 'MHP')
+# 4) Fit a k-means model for a subset of 5 variables for 2 different groups of regions (3 each)
+# 4.1) Compare the performance of the models using their within cluster sum of squares.
 
+library(ggplot2)
+
+#Select the variables for clustering
+kmeans_variables <- c('SPI', 'ECO', 'BDH', 'MKP', 'WRS')
+kmeans_subset <- Epi2024_results[,kmeans_variables]
+
+# Standardize the variables
+data_scaled <- scale(kmeans_subset)
+
+# Define the two groups of regions
+kmeans_region_1 <- c('Greater Middle East', 'Latin America & Caribbean', 'Global West')
+kmeans_region_2 <- c('Southern Asia', 'Eastern Europe', 'Asia-Pacific')
+
+#Subset the data for each group
+#kmean_subset1 <- kmeans_subset[Epi2024_results$region %in% kmeans_region_1, ]
+#kmean_subset2 <- kmeans_subset[Epi2024_results$region %in% kmeans_region_2, ]
+
+kmean_subset1 <- data_scaled[Epi2024_results$region %in% kmeans_region_1, ]
+kmean_subset2 <- data_scaled[Epi2024_results$region %in% kmeans_region_2, ]
+
+#Remove NA values
+kmean_subset_filtered_1 <- na.omit(kmean_subset1)
+kmean_subset_filtered_2 <- na.omit(kmean_subset2)
+
+# Fit k-means model for Group 1 and 2
+k <- 3
+#set.seed(123)
+#kmeans_group1 <- kmeans(kmean_subset_filtered_1, centers = k)
+#set.seed(123)
+#kmeans_group2 <- kmeans(kmean_subset_filtered_2, centers = k)
+
+# Used n start to report back the best result among the multiple times the kmeans function ran
+set.seed(123)
+kmeans_group_n1 <- kmeans(kmean_subset_filtered_1, centers = k, nstart = 25)
+set.seed(123)
+kmeans_group_n2 <- kmeans(kmean_subset_filtered_2, centers = k, nstart = 25)
+
+# WCSS for group 1 and 2
+wcss_group1 <- kmeans_group_n1$tot.withinss
+wcss_group2 <- kmeans_group_n2$tot.withinss
+
+# Print WCSS values
+cat("WCSS for Group 1:", wcss_group1, "\n")
+cat("WCSS for Group 2:", wcss_group2, "\n")
+
+# Group 1 WCSS is 105.279 and the WCSS for group 2 is 49.5866. The lower the WCSS, the tighter the clusters.
+# Therefore Group 2 has the better clustering performance for its model, and it is a better fit.
+
+# 1.2 In a loop fit kmeans models for both subsets using multiple values of k. Plot WCSS across k values. In
+# 1-2 sentences explain which model is better and why you think that is the case.
+
+
+ks <- c(1, 2, 3, 4, 5)
+
+# Compute WCSS for Group 1
+wss_group1 <- c()
+for (k in ks) {
+  set.seed(123)
+  km_g1 <- kmeans(kmean_subset_filtered_1, centers = k, nstart = 25)
+  wss_group1 <- c(wss_group1, km_g1$tot.withinss)
+}
+
+# Plot for Group 1
+plot(ks, wss_group1, type = "b", col = "blue", ylim= c(50,300),
+     xlab = "Number of Clusters (k)",
+     ylab = "Within-Cluster Sum of Squares (WCSS)",
+     main = "WCSS vs. k for Group 1")
+
+# Compute WCSS for Group 2
+wss_group2 <- c()
+for (k in ks) {
+  set.seed(123)
+  km_g2 <- kmeans(kmean_subset_filtered_2, centers = k, nstart = 25)
+  wss_group2 <- c(wss_group2, km_g2$tot.withinss)
+}
+
+# Plot for Group 2
+plot(ks, wss_group2, type = "b", col = "red", ylim= c(25,300),
+     xlab = "Number of Clusters (k)",
+     ylab = "Within-Cluster Sum of Squares (WCSS)",
+     main = "WCSS vs. k for Group 2")
+
+# The plot for WCSS across k values for group 2 is the better model. There is a 
+# lower WCSS at the elbow point of the model. This WCSS value indicates that this 
+# model has tighter clusters. Also at the elbow point of 3, it can be seen that adding more clusters
+# doesn't change significantly reduce the the WCSS. There is a clearer elbow plot in Group 2
+# which can indicate a well defined clustering structure. 
 
 
 
