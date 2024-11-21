@@ -2,7 +2,7 @@
 ### Exercise 1: Fitting a distribution ###
 
 #Set a working directory
-setwd("/Users/dirtydave/Documents/Data_Analytics/Lab 2")
+setwd("/Users/dirtydave/Documents/Data_Analytics/Lab 2/Part 1")
 
 #Read in the csv data
 EPI_data <- read.csv("epi2024results06022024.csv", header=TRUE)
